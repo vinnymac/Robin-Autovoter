@@ -270,6 +270,16 @@ function quitStayChat()
     }
 }
 
+function addAction(name, title, callback) {
+  var buttonClassName = "robin-chat--button-" + name;
+  var buttonHTML = "<button class='robin-chat--vote " + buttonClassName + "' value='" + name.toUpperCase() + "'" + "title='" + title + "'" + ">" +"<span class='robin-chat--vote-label'>" + name + "</span></button>";
+
+  $("#robinActionsWidget > .robin-chat--buttons").append(buttonHTML);
+  $("." + buttonClassName).on("click", function(e) {
+    callback(e);
+  });
+}
+
 (function(){
 
     // The first thing we do is make sure everything's alright
@@ -328,6 +338,10 @@ function quitStayChat()
             "</tr>" +
             "</table>" +
             "</div>" +
+            // Actions Widget
+            "<div id='robinActionsWidget' class='robin-chat--sidebar-widget'>" +
+            "<div class='robin-chat--buttons'></div>" +
+            "</div>" +
             // Reap timer widget
             "<div id='robinTimerWidget' class='robin-chat--sidebar-widget'>" +
             "<span style='font-size: 14px'>" +
@@ -345,6 +359,11 @@ function quitStayChat()
     addSetting("remove-duplicate-messages","Remove Duplicate Messages",true);
     addSetting("auto-quit-stay", "Auto-Quit Chat When Majority Stays", true);
     addSetting("auto-stay-big", "Stay When Room Size > 4000", true);
+
+    // Add actions
+    addAction("clear", "Clears out all messages immediately", function() {
+      $("#robinChatMessageList").empty();
+    });
 
     // With the statistics widget in place, populate it initially from local values
     updateStatistics(r.config);
